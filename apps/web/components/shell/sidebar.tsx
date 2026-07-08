@@ -8,9 +8,9 @@ import {
   LayoutDashboard,
   Settings,
   Users,
-  Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LogoMark } from "@/components/brand/logo";
 
 const NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -25,10 +25,8 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex h-14 items-center gap-2 border-b px-5">
-        <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-          <Zap className="h-4 w-4" />
-        </div>
+      <div className="flex h-14 items-center gap-2.5 border-b px-5">
+        <LogoMark size={28} gradientId="dp-logo-sidebar" />
         <span className="text-sm font-semibold tracking-tight">Developer Playground</span>
       </div>
       <nav className="flex-1 space-y-1 p-3">

@@ -1,7 +1,10 @@
 import { clearToken, getToken } from "./auth/token";
 
-export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") || "http://localhost:4000";
+// `??` (not `||`) so an explicit empty value is preserved — it means
+// "same origin" (the browser hits /api/... and nginx proxies to the API).
+export const API_BASE_URL = (
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000"
+).replace(/\/$/, "");
 
 /** Backend envelope: { success, data, meta? }. */
 interface ApiEnvelope<T> {
@@ -36,7 +39,11 @@ export interface RequestOptions extends Omit<RequestInit, "body"> {
 }
 
 function buildUrl(path: string, query?: RequestOptions["query"]): string {
-  const url = new URL(path.startsWith("http") ? path : `${API_BASE_URL}${path}`);
+  const raw = path.startsWith("http") ? path : `${API_BASE_URL}${path}`;
+  // Resolve against the current origin so a relative base (same-origin) works;
+  // an absolute `raw` ignores the second argument.
+  const origin = typeof window !== "undefined" ? window.location.origin : "http://localhost";
+  const url = new URL(raw, origin);
   if (query) {
     for (const [key, value] of Object.entries(query)) {
       if (value !== undefined && value !== null && value !== "") {

@@ -1,13 +1,11 @@
-import { Zap } from "lucide-react";
+import { LogoMark } from "@/components/brand/logo";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
       <div className="hidden flex-col justify-between bg-primary p-10 text-primary-foreground lg:flex">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary-foreground/10">
-            <Zap className="h-5 w-5" />
-          </div>
+        <div className="flex items-center gap-2.5">
+          <LogoMark size={36} gradientId="dp-logo-auth" />
           <span className="text-lg font-semibold">Developer Playground</span>
         </div>
         <div className="space-y-4">

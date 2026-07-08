@@ -1,4 +1,9 @@
-# Developer Playground — Dynamic API Integration Sandbox
+<p align="center">
+  <img alt="Developer Playground" src="docs/logo.png" width="112" height="112">
+</p>
+
+<h1 align="center">Developer Playground</h1>
+<p align="center"><strong>Dynamic API Integration Sandbox</strong></p>
 
 > Create and test mock APIs for third-party integrations — without waiting for
 > the real provider. Define endpoints, rules, authentication, and webhooks from
