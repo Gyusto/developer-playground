@@ -26,6 +26,7 @@ inspect every **request and delivery log** — all before a production API exist
 ## Table of contents
 
 - [Features](#features)
+- [Screenshots](#screenshots)
 - [Architecture](#architecture)
 - [Monorepo layout](#monorepo-layout)
 - [Quick start](#quick-start)
@@ -53,6 +54,25 @@ inspect every **request and delivery log** — all before a production API exist
 - 🧾 **Generated cURL examples** and **OpenAPI export**
 
 See the full picture in [docs/api-overview.md](docs/api-overview.md).
+
+---
+
+## Screenshots
+
+The portal in action — sign-up, endpoint builder, live request logs, and webhook tooling.
+
+|  |  |
+|:--:|:--:|
+| **Create account** — self-service sign-up spins up a new workspace | **Sign in** |
+| [![Create account](docs/screenshots/01b-register.png)](docs/screenshots/01b-register.png) | [![Sign in](docs/screenshots/01-login.png)](docs/screenshots/01-login.png) |
+| **Integration Systems** — one card per simulated provider | **Endpoints** — dynamic mock endpoints, live on save |
+| [![Integration systems](docs/screenshots/03-systems.png)](docs/screenshots/03-systems.png) | [![Endpoints](docs/screenshots/04-endpoints.png)](docs/screenshots/04-endpoints.png) |
+| **Request logs** — every call captured with status, timing & matched rule | **Outbound webhooks** — targets, payload templates, retries & signing |
+| [![Request logs](docs/screenshots/05-request-logs.png)](docs/screenshots/05-request-logs.png) | [![Webhooks](docs/screenshots/06-webhooks.png)](docs/screenshots/06-webhooks.png) |
+| **Generated documentation** — shareable API docs & cURL examples | **Webhook inbox** — inspect & replay inbound callbacks |
+| [![Documentation](docs/screenshots/07-documentation.png)](docs/screenshots/07-documentation.png) | [![Webhook inbox](docs/screenshots/08-webhook-inbox.png)](docs/screenshots/08-webhook-inbox.png) |
+
+> Captured from a live run of the stack against the seeded AzamPay checkout example.
 
 ---
 

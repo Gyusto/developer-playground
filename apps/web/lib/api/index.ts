@@ -14,10 +14,31 @@ import type {
   WorkspaceMember,
 } from "../types";
 
+// Paginated list envelope returned by the log endpoints.
+interface Paginated<T> {
+  items: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+/** Tolerate either a paginated envelope or a bare array from a list endpoint. */
+function unwrapItems<T>(res: Paginated<T> | T[]): T[] {
+  return Array.isArray(res) ? res : (res?.items ?? []);
+}
+
 // ---- Auth ----
 export interface LoginResponse {
-  accessToken: string;
+  token: string;
   user: User;
+}
+
+export interface RegisterInput {
+  email: string;
+  name: string;
+  password: string;
+  workspaceName?: string;
 }
 
 export const authApi = {
@@ -26,6 +47,12 @@ export const authApi = {
       method: "POST",
       auth: false,
       body: { email, password },
+    }),
+  register: (input: RegisterInput) =>
+    apiFetch<LoginResponse>("/api/v1/auth/register", {
+      method: "POST",
+      auth: false,
+      body: input,
     }),
   forgotPassword: (email: string) =>
     apiFetch<{ sent: boolean }>("/api/v1/auth/forgot-password", {
@@ -140,14 +167,21 @@ export interface LogQuery {
 }
 
 export const logsApi = {
+  // The log endpoints return a paginated envelope ({ items, total, ... }); unwrap to the array.
   requestLogs: (query?: LogQuery) =>
-    apiFetch<RequestLog[]>("/api/v1/request-logs", { query: query as never }),
+    apiFetch<Paginated<RequestLog>>("/api/v1/request-logs", { query: query as never }).then(
+      unwrapItems,
+    ),
   requestLog: (id: string) => apiFetch<RequestLog>(`/api/v1/request-logs/${id}`),
   webhookDeliveries: (query?: LogQuery) =>
-    apiFetch<WebhookDelivery[]>("/api/v1/webhook-deliveries", { query: query as never }),
+    apiFetch<Paginated<WebhookDelivery>>("/api/v1/webhook-deliveries", {
+      query: query as never,
+    }).then(unwrapItems),
   webhookDelivery: (id: string) => apiFetch<WebhookDelivery>(`/api/v1/webhook-deliveries/${id}`),
   inboundWebhookLogs: (query?: LogQuery) =>
-    apiFetch<InboundWebhookLog[]>("/api/v1/inbound-webhook-logs", { query: query as never }),
+    apiFetch<Paginated<InboundWebhookLog>>("/api/v1/inbound-webhook-logs", {
+      query: query as never,
+    }).then(unwrapItems),
   inboundWebhookLog: (id: string) =>
     apiFetch<InboundWebhookLog>(`/api/v1/inbound-webhook-logs/${id}`),
   replayInbound: (id: string) =>

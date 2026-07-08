@@ -15,6 +15,14 @@ export const loginSchema = z.object({
 });
 export type LoginInput = z.infer<typeof loginSchema>;
 
+export const registerSchema = z.object({
+  name: z.string().min(1, "Name is required").max(120),
+  email: z.string().min(1, "Email is required").email("Enter a valid email"),
+  password: z.string().min(8, "Password must be at least 8 characters").max(200),
+  workspaceName: z.string().max(120).optional().or(z.literal("")),
+});
+export type RegisterInput = z.infer<typeof registerSchema>;
+
 export const forgotPasswordSchema = z.object({
   email: z.string().min(1, "Email is required").email("Enter a valid email"),
 });

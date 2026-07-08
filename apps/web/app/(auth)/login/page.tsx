@@ -76,10 +76,18 @@ function LoginForm() {
         </Button>
       </form>
 
-      <div className="text-center text-sm text-muted-foreground">
-        <Link href="/forgot-password" className="underline underline-offset-4 hover:text-foreground">
-          Forgot your password?
-        </Link>
+      <div className="space-y-2 text-center text-sm text-muted-foreground">
+        <div>
+          <Link href="/forgot-password" className="underline underline-offset-4 hover:text-foreground">
+            Forgot your password?
+          </Link>
+        </div>
+        <div>
+          Don&apos;t have an account?{" "}
+          <Link href="/register" className="underline underline-offset-4 hover:text-foreground">
+            Create one
+          </Link>
+        </div>
       </div>
     </div>
   );

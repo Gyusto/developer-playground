@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { authApi } from "../api";
+import { authApi, type RegisterInput } from "../api";
 import type { User } from "../types";
 import { clearToken, getStoredUser, getToken, setStoredUser, setToken } from "./token";
 
@@ -11,6 +11,7 @@ interface AuthContextValue {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
+  register: (input: RegisterInput) => Promise<void>;
   logout: () => void;
 }
 
@@ -47,8 +48,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
-    const { accessToken, user: u } = await authApi.login(email, password);
-    setToken(accessToken);
+    const { token, user: u } = await authApi.login(email, password);
+    setToken(token);
+    setStoredUser(u);
+    setUser(u);
+  }, []);
+
+  const register = useCallback(async (input: RegisterInput) => {
+    const { token, user: u } = await authApi.register(input);
+    setToken(token);
     setStoredUser(u);
     setUser(u);
   }, []);
@@ -65,9 +73,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isAuthenticated: !!user,
       isLoading,
       login,
+      register,
       logout,
     }),
-    [user, isLoading, login, logout],
+    [user, isLoading, login, register, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
