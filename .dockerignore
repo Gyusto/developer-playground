@@ -1,0 +1,32 @@
+# Keep the Docker build context small & reproducible.
+# The lockfile + source are what the multi-stage builds need.
+
+**/node_modules
+**/dist
+**/.next
+**/out
+**/build
+**/coverage
+**/.turbo
+
+# Prisma generated client is regenerated inside the image.
+packages/database/generated
+**/*.tsbuildinfo
+
+# Local env & secrets must never enter an image layer.
+.env
+.env.*
+!.env.example
+
+# VCS / editor / OS noise
+.git
+.gitignore
+.github
+**/.DS_Store
+**/*.log
+
+# Docs & compose are not needed inside the app images.
+docs
+README.md
+Makefile
+docker-compose.yml

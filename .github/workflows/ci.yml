@@ -1,0 +1,125 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel superseded runs on the same ref.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Prisma engine chatter off; deterministic installs.
+  CI: "true"
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Lint + typecheck/build + unit tests across the whole workspace.
+  # ---------------------------------------------------------------------------
+  build-test:
+    name: Lint, build & unit test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        # Version is read from the root package.json "packageManager" field.
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm --filter @developer-playground/database generate
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Build (typecheck)
+        run: pnpm build
+
+      - name: Unit tests
+        run: pnpm test
+
+  # ---------------------------------------------------------------------------
+  # Integration tests against real Postgres + Redis services.
+  # ---------------------------------------------------------------------------
+  integration:
+    name: Integration tests (Postgres + Redis)
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: developer-playground
+          POSTGRES_PASSWORD: developer-playground
+          POSTGRES_DB: developer-playground_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U developer-playground -d developer-playground_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://developer-playground:developer-playground@localhost:5432/developer-playground_test?schema=public
+      REDIS_HOST: localhost
+      REDIS_PORT: "6379"
+      REDIS_URL: redis://localhost:6379
+      # Deterministic non-secret values so the apps boot in CI.
+      PORTAL_JWT_SECRET: ci-test-jwt-secret
+      PORTAL_JWT_EXPIRES_IN: 1d
+      CREDENTIAL_ENCRYPTION_KEY: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+      PUBLIC_BASE_URL: http://localhost:4000
+      MAX_JSON_BODY_BYTES: "1048576"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm --filter @developer-playground/database generate
+
+      - name: Apply migrations
+        run: pnpm --filter @developer-playground/database migrate:deploy
+
+      - name: Seed database
+        run: pnpm db:seed
+
+      - name: Integration tests
+        # Falls back gracefully if an app has no `test:integration` script yet.
+        run: pnpm -r --if-present test:integration
