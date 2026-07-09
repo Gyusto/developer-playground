@@ -52,7 +52,7 @@ Everything is served under the `/api` prefix on `API_PORT` (default `4000`).
 
 ```bash
 curl -i -X POST \
-  http://localhost:4000/api/runtime/otapp-qa/azampay-checkout/uat/v1/checkout \
+  http://localhost:4000/api/runtime/flowbitly-qa/azampay-checkout/uat/v1/checkout \
   -H "X-API-Key: <API_KEY_FROM_SEED>" \
   -H "Content-Type: application/json" \
   -d '{

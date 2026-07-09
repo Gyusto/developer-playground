@@ -79,7 +79,7 @@ export default function RegisterPage() {
           <Input
             id="workspaceName"
             autoComplete="organization"
-            placeholder="Otapp QA Workspace"
+            placeholder="Flowbitly QA Workspace"
             {...register("workspaceName")}
           />
         </Field>

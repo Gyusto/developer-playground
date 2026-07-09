@@ -28,9 +28,9 @@ async function main(): Promise<void> {
 
   // ---- Workspace + membership ---------------------------------------------
   const workspace = await prisma.workspace.upsert({
-    where: { slug: 'otapp-qa' },
-    update: { name: 'Otapp QA' },
-    create: { name: 'Otapp QA', slug: 'otapp-qa' },
+    where: { slug: 'flowbitly-qa' },
+    update: { name: 'Flowbitly QA' },
+    create: { name: 'Flowbitly QA', slug: 'flowbitly-qa' },
   });
 
   await prisma.workspaceMember.upsert({
@@ -243,8 +243,8 @@ async function main(): Promise<void> {
 
   // ---- Summary -------------------------------------------------------------
   const baseUrl = process.env.PUBLIC_BASE_URL || 'http://localhost:4000';
-  const runtimeUrl = `${baseUrl}/api/runtime/otapp-qa/azampay-checkout/uat/v1/checkout`;
-  const receiverUrl = `${baseUrl}/api/webhook-receiver/otapp-qa/azampay-checkout/uat/payment-callback`;
+  const runtimeUrl = `${baseUrl}/api/runtime/flowbitly-qa/azampay-checkout/uat/v1/checkout`;
+  const receiverUrl = `${baseUrl}/api/webhook-receiver/flowbitly-qa/azampay-checkout/uat/payment-callback`;
 
   console.log('\n=== Developer Playground seed complete ===');
   console.log('User:               ', user.email, `(${user.id})`);

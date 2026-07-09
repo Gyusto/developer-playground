@@ -26,7 +26,7 @@ authentication, response modes, template variables, and the webhook flow.
 Example:
 
 ```http
-POST /api/runtime/otapp-qa/azampay-checkout/uat/v1/checkout
+POST /api/runtime/flowbitly-qa/azampay-checkout/uat/v1/checkout
 X-API-Key: sandbox_key_123
 Content-Type: application/json
 ```
