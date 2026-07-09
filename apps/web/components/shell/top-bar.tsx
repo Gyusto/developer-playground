@@ -27,7 +27,7 @@ export function TopBar() {
   const workspace = user?.workspaceName ?? "Workspace";
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b bg-background/95 px-4 backdrop-blur">
+    <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b bg-background/95 px-4 sm:px-6 lg:px-8 backdrop-blur">
       <Button
         variant="ghost"
         size="icon"
